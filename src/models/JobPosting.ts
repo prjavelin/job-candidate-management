@@ -6,9 +6,10 @@ export interface JobPosting {
     status: string;
     openingDate: string;
     closingDate: string;
+    topCandidates: string;
     chosenCandidate: string;
     budgetRange: string;
-    requiredSkills: string[];
+    requiredSkills: string;
     openings: number;
     hiringManager: string;
   }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import JobList from './components/Joblist'
+import JobList from './components/Joblist/Joblist'
 
 function App() {
 
