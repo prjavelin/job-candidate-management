@@ -1,16 +1,49 @@
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { JobPosting } from "../../models/JobPosting";
-// import "./JobForm.module.css";
+import { postJob } from "../../services/jobService";
+//import "./JobForm.module.css";
+
+// interface JobFormProps {
+//   onAddJob: (newJob: JobPosting) => void;
+//   onClose: () => void;
+// }
+
+// const JobForm: React.FC<JobFormProps> = ({ onAddJob, onClose }) => {
+//   const [job, setJob] = useState<JobPosting>({
+//     id: 0,
+//     title: "",
+//     description: "",
+//     location: "Remote",
+//     status: "Open",
+//     openingDate: "",
+//     closingDate: "",
+//     chosenCandidate: "None",
+//     topCandidates: "",
+//     budgetRange: "",
+//     requiredSkills: '',
+//     openings: 1,
+//     hiringManager: "",
+//   });
+
+//   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+//     setJob({ ...job, [e.target.name]: e.target.value });
+//   };
+
+//   const handleSubmit = (e: React.FormEvent) => {
+//     e.preventDefault();
+//     onAddJob({ ...job, id: Date.now() }); // Assign unique ID
+//     onClose();
+//   };
 
 interface JobFormProps {
-  onAddJob: (newJob: JobPosting) => void;
-  onClose: () => void;
-}
-
+    onAddJob: (newJob: JobPosting) => void;
+    onClose: () => void;
+  }
+  
 const JobForm: React.FC<JobFormProps> = ({ onAddJob, onClose }) => {
   const [job, setJob] = useState<JobPosting>({
-    id: 0,
+    id: 1,
     title: "",
     description: "",
     location: "Remote",
@@ -18,22 +51,33 @@ const JobForm: React.FC<JobFormProps> = ({ onAddJob, onClose }) => {
     openingDate: "",
     closingDate: "",
     chosenCandidate: "None",
-    topCandidates: "",
     budgetRange: "",
     requiredSkills: '',
     openings: 1,
     hiringManager: "",
   });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setJob({ ...job, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onAddJob({ ...job, id: Date.now() }); // Assign unique ID
-    onClose();
-  };
+  
+    const handleChange = (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) => {
+      // For the requiredSkills field, you might later parse a comma-separated string into an array
+      setJob({ ...job, [e.target.name]: e.target.value });
+    };
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      try {
+        // Post the job to the backend API
+        const newJob = await postJob({ ...job, id: 1 });
+        onAddJob(newJob);
+        onClose();
+      } catch (err) {
+        console.error(err);
+        console.log(Response);
+      }
+    };
 
   return (
     <div className="modal show d-block" tabIndex={-1}>

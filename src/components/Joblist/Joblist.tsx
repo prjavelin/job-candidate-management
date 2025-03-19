@@ -1,15 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsis, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+
 import { JobPosting } from "../../models/JobPosting";
 import JobForm from "../Joblist/AddJob"; 
+import { getJobs } from "../../services/jobService";
+
 
 const JobList: React.FC = () => {
   const [jobs, setJobs] = useState<JobPosting[]>([]);
   const [showModal, setShowModal] = useState(false);
 
+  useEffect(() => {
+    getJobs()
+      .then((data) => setJobs(data))
+      .catch((err) => console.error(err));
+  }, []);
+
   const addJob = (newJob: JobPosting) => {
     setJobs([...jobs, newJob]);
-    setShowModal(false); // Close modal after adding
   };
 
   return (
@@ -26,7 +36,7 @@ const JobList: React.FC = () => {
 
       <div className="table-responsive">
         <table className="table table-bordered table-hover">
-          <thead className="table-dark">
+          <thead className="table-primary">
             <tr>
               <th>Title</th>
               <th>Description</th>
@@ -34,12 +44,14 @@ const JobList: React.FC = () => {
               <th>Status</th>
               <th>Opening Date</th>
               <th>Closing Date</th>
-              <th>Top Candidates</th>
+              <th>Number of Candidates</th>
+              {/* <th>Top Candidates</th> */}
               <th>Candidate Chosen</th>
               <th>Budget</th>
               <th>Required Skills</th>
               <th>Openings</th>
               <th>Hiring Manager</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -48,15 +60,23 @@ const JobList: React.FC = () => {
                 <td>{job.title}</td>
                 <td>{job.description}</td>
                 <td>{job.location}</td>
-                <td>{job.status}</td>
+                <td>
+                  {job.status === "Open" ? (
+                    <FontAwesomeIcon icon={faCheck} className="text-success" />
+                  ) : (
+                    <FontAwesomeIcon icon={faTimes} className="text-danger" />
+                  )}
+                </td>
                 <td>{job.openingDate}</td>
                 <td>{job.closingDate}</td>
-                <td>{job.topCandidates}</td>
+                <td>7</td>
+                {/* <td>{job.topCandidates}</td> */}
                 <td>{job.chosenCandidate}</td>
                 <td>{job.budgetRange}</td>
                 <td>{job.requiredSkills}</td>
                 <td>{job.openings}</td>
                 <td>{job.hiringManager}</td>
+                <td><FontAwesomeIcon icon={faEllipsis} /></td>
               </tr>
             ))}
           </tbody>
